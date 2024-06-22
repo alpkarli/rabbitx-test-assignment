@@ -12,7 +12,7 @@ export default function Home() {
   let sub: Subscription | null;
   const [asks, pushAsk] = useLimitedSizeArray(MAXIMUM_ORDER_NUMBER, 'desc', 'asks'); // Use 'asc' for ascending order
   const [bids, pushBid] = useLimitedSizeArray(MAXIMUM_ORDER_NUMBER, 'asc', 'bids'); // Use 'desc' for descending order
-  const [contactPrice, setContactPrice] = useState(0);
+  const [contractPrice, setContractPrice] = useState(0);
 
   const receiveNewData = (newAsks, newBids) => {
     pushAsk(newAsks.map(ask => ({ price: ask[0], size: parseFloat(ask[1]).toFixed(4) })));
@@ -32,7 +32,7 @@ export default function Home() {
 
   useEffect(() => {
     if (asks.length !== 0 && bids.length !== 0) {
-      setContactPrice((parseFloat(asks[0]?.price) + parseFloat(bids[MAXIMUM_ORDER_NUMBER - 1]?.price)) / 2);
+      setContractPrice((parseFloat(asks[0]?.price) + parseFloat(bids[MAXIMUM_ORDER_NUMBER - 1]?.price)) / 2);
     }
   }, [asks, bids]);
 
@@ -103,7 +103,7 @@ export default function Home() {
             })}
           </div>
           <div className="w-[400px] bg-slate-800 rounded-sm p-2 m-2">
-            {contactPrice.toFixed(0)}
+            {contractPrice.toFixed(0)}
           </div>
           <div className="text-green-600 w-[400px] text-sm">
             {asks?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
