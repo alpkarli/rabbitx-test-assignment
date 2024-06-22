@@ -32,9 +32,6 @@ export default function Home() {
 
   useEffect(() => {
     if (asks.length !== 0 && bids.length !== 0) {
-      console.log(asks);
-      console.log(bids);
-      
       setContactPrice((parseFloat(asks[0]?.price) + parseFloat(bids[MAXIMUM_ORDER_NUMBER - 1]?.price)) / 2);
     }
   }, [asks, bids]);
@@ -74,38 +71,42 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="w-[400px] mb-2">
-        <div className="flex justify-between text-sm">
-          <div className="w-[100px] text-left">Price <span className="text-xs rounded-xl p-1	bg-slate-800">USD</span></div>
-          <div className="w-[100px] text-right">Amount <span className="text-xs rounded-xl p-1	bg-slate-800">BTC</span></div>
-          <div className="w-[100px] text-right">Total <span className="text-xs rounded-xl p-1	bg-slate-800">BTC</span></div>
+    <main className="flex min-h-screen flex-col items-center">
+      <div className="w-[600px] min-h-screen flex-col items-center content-center justify-center">
+        <div>
+          <div className="w-[400px] mb-2">
+            <div className="flex justify-between text-sm">
+              <div className="w-[100px] text-left">Price <span className="text-xs rounded-xl p-1	bg-slate-800">USD</span></div>
+              <div className="w-[100px] text-right">Amount <span className="text-xs rounded-xl p-1	bg-slate-800">BTC</span></div>
+              <div className="w-[100px] text-right">Total <span className="text-xs rounded-xl p-1	bg-slate-800">BTC</span></div>
+            </div>
+          </div>
+          <div className="text-red-600 w-[400px] text-sm">
+            {bids?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
+              return (
+                <div key={index} className="flex justify-between">
+                  <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
+                  <div className="w-[100px] text-right">{size?.toString()}</div>
+                  <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                </div>
+              )
+            })}
+          </div>
+          <div className="w-[400px] bg-slate-800 rounded-sm">
+            {contactPrice}
+          </div>
+          <div className="text-green-600 w-[400px] text-sm">
+            {asks?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
+              return (
+                <div key={index} className="flex justify-between">
+                  <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
+                  <div className="w-[100px] text-right">{size?.toString()}</div>
+                  <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div>
-      <div className="text-red-600 w-[400px] text-sm">
-        {bids?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
-          return (
-            <div key={index} className="flex justify-between">
-              <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
-              <div className="w-[100px] text-right">{size?.toString()}</div>
-              <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
-            </div>
-          )
-        })}
-      </div>
-      <div className="w-[400px] bg-slate-800 rounded-sm">
-        {contactPrice}
-      </div>
-      <div className="text-green-600 w-[400px] text-sm">
-        {asks?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
-          return (
-            <div key={index} className="flex justify-between">
-              <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
-              <div className="w-[100px] text-right">{size?.toString()}</div>
-              <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
-            </div>
-          )
-        })}
       </div>
     </main>
   );
