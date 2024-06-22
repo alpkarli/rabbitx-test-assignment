@@ -1,8 +1,9 @@
 "use client"
 import { Key, useEffect, useMemo, useState } from "react";
-import { centrifugeTest } from "./centrifuge";
+import { centrifugeProd, centrifugeTest } from "./centrifuge";
 import { Subscription } from "centrifuge";
 import { useLimitedSizeArray } from './limitedSizeArray';
+import { numberWithCommas } from './numberWithCommas';
 
 export default function Home() {
 
@@ -11,9 +12,9 @@ export default function Home() {
   const [asks, pushAsk] = useLimitedSizeArray(11);
   const [bids, pushBid] = useLimitedSizeArray(11);
 
-  const receiveNewData = (newAsks: Number[][], newBids: Number[][]) => {
-    newAsks.forEach(ask => pushAsk({ price: ask[0], size: ask[1] }));
-    newBids.forEach(bid => pushBid({ price: bid[0], size: bid[1] }));
+  const receiveNewData = (newAsks, newBids) => {
+    pushAsk(newAsks.map(ask => ({ price: numberWithCommas(ask[0]), size: parseFloat(ask[1]).toFixed(4) })));
+    pushBid(newBids.map(bid => ({ price: numberWithCommas(bid[0]), size: parseFloat(bid[1]).toFixed(4) })));
   };
 
   useEffect(() => {
@@ -64,34 +65,28 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div>
-        <div>
-          BIDS
-        </div>
-        {bids?.map(({ price, size }: { price: Number, size: Number }, index: Key | null | undefined) => {
+    <main className="flex min-h-screen flex-col items-center p-24">
+      <div className="text-red-600 w-[400px]">
+        {bids?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
           return (
-            <div key={index}>
-
-              <span>Price: {price?.toString()}</span>
-              <span>Size: {size?.toString()}</span>
+            <div key={index} className="flex justify-between">
+              <div>Price: {price?.toString()}</div>
+              <div>Size: {size?.toString()}</div>
+              <div>Total: {cumulativeTotal?.toString()}</div>
             </div>
           )
         })}
-        <div>
-          <div>
-            ASKS
-          </div>
-          {asks?.map(({ price, size }: { price: Number, size: Number }, index: Key | null | undefined) => {
-            return (
-              <div key={index}>
-
-                <span>Price: {price?.toString()}</span>
-                <span>Size: {size?.toString()}</span>
-              </div>
-            )
-          })}
-        </div>
+      </div>
+      <div className="text-green-600 w-[400px]">
+        {asks?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
+          return (
+            <div key={index} className="flex justify-between">
+              <div>Price: {price?.toString()}</div>
+              <div>Size: {size?.toString()}</div>
+              <div>Total: {cumulativeTotal?.toString()}</div>
+            </div>
+          )
+        })}
       </div>
     </main>
   );
