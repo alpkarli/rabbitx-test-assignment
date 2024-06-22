@@ -73,7 +73,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <div className="w-[600px] min-h-screen flex-col items-center content-center justify-center">
-        <div>
+        <div className="items-center flex-col flex">
           <div className="w-[400px] mb-2">
             <div className="flex justify-between text-sm">
               <div className="w-[100px] text-left">Price <span className="text-xs rounded-xl p-1	bg-slate-800">USD</span></div>
@@ -83,27 +83,47 @@ export default function Home() {
           </div>
           <div className="text-red-600 w-[400px] text-sm">
             {bids?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
-              return (
-                <div key={index} className="flex justify-between">
-                  <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
-                  <div className="w-[100px] text-right">{size?.toString()}</div>
-                  <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
-                </div>
-              )
+              if (index === MAXIMUM_ORDER_NUMBER - 1) {
+                return (
+                  <div key={index} className="flex justify-between">
+                    <div className="w-[100px] text-left bg-red-300 rounded-md">{numberWithCommas(price)}</div>
+                    <div className="w-[100px] text-right">{size?.toString()}</div>
+                    <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={index} className="flex justify-between">
+                    <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
+                    <div className="w-[100px] text-right">{size?.toString()}</div>
+                    <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                  </div>
+                )
+              }
             })}
           </div>
-          <div className="w-[400px] bg-slate-800 rounded-sm">
-            {contactPrice}
+          <div className="w-[400px] bg-slate-800 rounded-sm p-2 m-2">
+            {contactPrice.toFixed(0)}
           </div>
           <div className="text-green-600 w-[400px] text-sm">
             {asks?.map(({ price, size, cumulativeTotal }: { price: Number, size: Number, cumulativeTotal: Number }, index: Key | null | undefined) => {
-              return (
-                <div key={index} className="flex justify-between">
-                  <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
-                  <div className="w-[100px] text-right">{size?.toString()}</div>
-                  <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
-                </div>
-              )
+              if (index === 0) {
+                return (
+                  <div key={index} className="flex justify-between">
+                    <div className="w-[100px] text-left bg-green-300 rounded-md">{numberWithCommas(price)}</div>
+                    <div className="w-[100px] text-right">{size?.toString()}</div>
+                    <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                  </div>
+                )
+              } else {
+                return (
+                  <div key={index} className="flex justify-between">
+                    <div className="w-[100px] text-left">{numberWithCommas(price)}</div>
+                    <div className="w-[100px] text-right">{size?.toString()}</div>
+                    <div className="w-[100px] text-right">{cumulativeTotal?.toString()}</div>
+                  </div>
+                )
+              }
             })}
           </div>
         </div>
